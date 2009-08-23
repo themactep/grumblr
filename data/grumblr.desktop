@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Grumblr
+Comment=Tumblr companion for GNOME
+Exec=grumblr
+Icon=grumblr
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Network;

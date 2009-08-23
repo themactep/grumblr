@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+# 
+=begin
+  Grumblr - Tumblr companion for GNOME.
+
+  Copyright (c) 2009, Paul Philippov <themactep@gmail.com>
+
+  This software is released under the BSD License.
+  http://creativecommons.org/licenses/BSD/
+=end
+
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+
+begin
+  require 'rubygems'
+rescue LoadError
+  nil
+end
+
+require 'grumblr/core'
+
+Grumblr::Core.new
+Thread.new { Grumblr::StatusIcon.new }
+$app.main

@@ -1,0 +1,37 @@
+== Grumblr ==
+
+Grumblr is a tool to post messages to your Tumblr blog from GNOME.
+
+=== Licence ===
+
+  New BSD License
+
+
+=== Requirements: ===
+
+  * Ruby
+    http://www.ruby-lang.org/
+
+  * GTK+
+    http://www.mozilla.org/
+
+  * LibXml Ruby
+    http://libxml.rubyforge.org/
+
+  * REST Client
+    http://github.com/adamwiggins/rest-client/
+
+
+=== Installation ===
+
+  $ sudo gem install grumblr
+
+
+=== Homepage ===
+
+  http://themactep.com/grumblr/
+
+
+=== Authors ===
+
+  Paul Philippov <themactep@gmail.com>
