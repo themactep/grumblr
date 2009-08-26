@@ -1,0 +1,9 @@
+version 2.0.1 (2009-08-26)
+
+  * Added Changelog file.
+  * Added external VERSION
+  * Tags support. Separated by either comma or space.
+
+version 2.0.0 (2009-08-24)
+
+  * Multiple blogs support.

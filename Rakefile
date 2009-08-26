@@ -8,9 +8,9 @@ require 'spec/rake/spectask'
 
 spec = Gem::Specification.new do |s|
   s.name = 'grumblr'
-  s.version = '2.0.0'
+  s.version = File.open('VERSION') { |f| f.read }
   s.has_rdoc = false
-  s.extra_rdoc_files = ['README', 'LICENSE']
+  s.extra_rdoc_files = ['README', 'LICENSE', 'Changelog', 'VERSION']
   s.summary = "Tumblr companion for GNOME"
   s.description = "Grumblr is a message poster to Tumblr blogs from GNOME"
   s.author = 'Paul Philippov'
@@ -18,7 +18,8 @@ spec = Gem::Specification.new do |s|
   s.homepage = 'http://themactep.com/grumblr/'
   s.rubyforge_project = 'grumblr'
   s.executables = ['grumblr']
-  s.files = %w(LICENSE README Rakefile) + Dir.glob("{bin,data,lib,spec}/**/*")
+  s.files = Dir.glob("{bin,data,lib,spec}/**/*") + \
+            %w(LICENSE README Rakefile Changelog VERSION)
   s.require_path = "lib"
   s.bindir = "bin"
   s.add_dependency "ppds-libs"

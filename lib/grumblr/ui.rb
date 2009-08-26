@@ -2,7 +2,9 @@ require 'gtk2'
 
 module Grumblr
 
-  DATA_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'data'))
+  APP_ROOT  = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
+  DATA_ROOT = File.join(APP_ROOT, 'data')
+  VERSION   = File.open(File.join(APP_ROOT,'VERSION')) { |f| f.read }
 
   class UI < Gtk::Window
 
@@ -264,10 +266,14 @@ module Grumblr
         post
       end
 
+      @tags = Gtk::Entry.new
+      
       button_box = Gtk::HBox.new false, 4
       button_box.pack_start clear_button, false
       button_box.pack_start @private_button, false
-      button_box.pack_start submit_button
+      button_box.pack_start Gtk::Label.new('Tags'), false
+      button_box.pack_start @tags, true
+      button_box.pack_start submit_button, true
 
       ##
       ### Layout
@@ -298,6 +304,8 @@ module Grumblr
 
       optional_data.delete_if { |x,y| y == "" or y.nil? }
 
+      tags = @tags.get_value.gsub(/\s+/,',').split(',').uniq.sort - ['']
+
       data = {
         :generator  => 'Grumblr',
         :email      => $cfg.get(:email),
@@ -305,6 +313,7 @@ module Grumblr
         :channel_id => $app.blog.name,
         :group      => $app.blog.name + '.tumblr.com',
         :type       => message_type,
+        :tags       => tags.join(','),
         :format     => @format.active? ? 'markdown' : 'html',
         :private    => @private_button.active? ? 1 : 0
       }
@@ -377,6 +386,7 @@ module Grumblr
         Ppds::Tumblr::OPTIONAL_FIELDS ].each do |fieldset|
         reset_fields_for(fieldset, message_type)
       end
+      @tags.clear
     end
   end
 
@@ -427,7 +437,7 @@ module Grumblr
 
       header = Gtk::Label.new
       header.set_alignment 0.0, 0.8
-      header.set_markup '<big><big><b>Grumblr 2.0</b></big></big>'
+      header.set_markup '<big><big><b>Grumblr 2</b></big></big>'
 
       vbox = Gtk::VBox.new false, 4
       vbox.pack_start header
@@ -472,7 +482,7 @@ module Grumblr
       super
       self.logo          = $gui.logo
       self.program_name  = 'Grumblr'
-      self.version       = '2.0.0'
+      self.version       = Grumblr::VERSION
       self.copyright     = "Copyright (c)2009, Paul Philippov"
       self.comments      = "Tumblr companion for GNOME"
       self.license       = "New BSD License.\nhttp://creativecommons.org/licenses/BSD/"
