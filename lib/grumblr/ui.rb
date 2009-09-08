@@ -14,19 +14,18 @@ module Grumblr
       super Gtk::Window::TOPLEVEL
 
       filename = File.join(Grumblr::DATA_ROOT, 'pixmaps', 'grumblr.svg')
-      self.logo = Gdk::Pixbuf.new filename, 128, 128
-
-      self.set_size_request 480, 360
-      self.set_allow_shrink false
-      self.set_title 'Grumblr'
-
-      self.set_icon self.logo
-      self.set_default_width $cfg.get(:window_width).to_i
-      self.set_default_height $cfg.get(:window_height).to_i
-      self.move $cfg.get(:window_x_pos).to_i, $cfg.get(:window_y_pos).to_i
-      self.signal_connect(:destroy) { quit }
-      self.signal_connect(:delete_event) { minimize }
-      self.signal_connect(:check_resize) do |widget|
+      self.logo = Gdk::Pixbuf.new(filename, 128, 128)
+      
+      set_size_request 440, 320
+      set_allow_shrink false
+      set_title 'Grumblr'
+      set_icon self.logo
+      set_default_width $cfg.get(:window_width).to_i
+      set_default_height $cfg.get(:window_height).to_i
+      move $cfg.get(:window_x_pos).to_i, $cfg.get(:window_y_pos).to_i
+      signal_connect(:destroy) { quit }
+      signal_connect(:delete_event) { minimize }
+      signal_connect(:check_resize) do |widget|
         x, y = widget.position
         w, h = widget.size
         $cfg.set :window_x_pos, x
@@ -67,66 +66,59 @@ module Grumblr
       #
       # Text page
       #
-      @text_title = Gtk::Entry.new
+      @text_title = Gtk::LabeledEntry.new 'Title (optional)'
 
-      @format = Gtk::CheckButton.new '_markdown'
-      @format.set_active $cfg.get(:format_markdown)
-      @format.signal_connect(:toggled) do |widget|
-        $cfg.set :format_markdown, widget.active?
-      end
-
-      label = Gtk::Label.new 'Body'
-
-      box = Gtk::HBox.new false, 8
-      box.pack_start label, false
-      box.pack_start @format, false
+      @text_body  = Gtk::LabeledTextView.new 'Body'
 
       page = Gtk::VBox.new false, 4
       page.set_border_width 8
-      page.pack_with_label 'Title (optional)', @text_title
-      page.pack_start box, false
-      page.pack_start multiline_entry(:text_body), true
+      page.pack_start @text_title, false
+      page.pack_start scrollable(@text_body), true
 
       @notebook.add_page_with_tab page, 'Text'
 
       #
       # Link page
       #
-      @link_url = Gtk::Entry.new
-      @link_name = Gtk::Entry.new
-      link_description = multiline_entry :link_description
+      @link_url = Gtk::LabeledEntry.new 'URL'
+      @link_name = Gtk::LabeledEntry.new 'Name (optional)'
+      @link_description = Gtk::LabeledTextView.new 'Description (optional)'
+      scroll = Gtk::ScrolledWindow.new
+      scroll.set_shadow_type Gtk::SHADOW_IN
+      scroll.set_policy Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC
+      scroll.add @link_description
 
       page = Gtk::VBox.new false, 4
       page.set_border_width 8
-      page.pack_with_label 'URL', @link_url
-      page.pack_with_label 'Name (optional)', @link_name
-      page.pack_with_label'Description (optional)', link_description, true
+      page.pack_start @link_url, false
+      page.pack_start @link_name, false
+      page.pack_start scroll, true
 
       @notebook.add_page_with_tab page, 'Link'
 
       #
       # Chat page
       #
-      @chat_title = Gtk::Entry.new
-      chat_conversation = multiline_entry :chat_conversation
+      @chat_title = Gtk::LabeledEntry.new 'Title (optional)'
+      @chat_conversation = Gtk::LabeledTextView.new 'Conversation'
 
       page = Gtk::VBox.new false, 4
       page.set_border_width 8
-      page.pack_with_label 'Title (optional)', @chat_title
-      page.pack_with_label 'Conversation', chat_conversation, true
+      page.pack_start @chat_title, false
+      page.pack_start scrollable(@chat_conversation), true
 
       @notebook.add_page_with_tab page, 'Chat'
 
       #
       # Quote page
       #
-      @quote_source = Gtk::Entry.new
-      quote_quote = multiline_entry :quote_quote
+      @quote_source = Gtk::LabeledEntry.new 'Source (optional)'
+      @quote_quote = Gtk::LabeledTextView.new 'Quote'
 
       page = Gtk::VBox.new false, 4
       page.set_border_width 8
-      page.pack_with_label 'Quote', quote_quote, true
-      page.pack_with_label 'Source (optional)', @quote_source
+      page.pack_start scrollable(@quote_quote), true
+      page.pack_start @quote_source, false
 
       @notebook.add_page_with_tab page, 'Quote'
 
@@ -137,17 +129,17 @@ module Grumblr
       filter.set_name "Images"
       filter.add_mime_type "image/*"
 
-      @photo_source = Gtk::Entry.new
-      @photo_click_through_url = Gtk::Entry.new
       photo_data = file_chooser_button :photo_data, filter
-      photo_caption = multiline_entry :photo_caption
+      @photo_source = Gtk::LabeledEntry.new 'Source'
+      @photo_click_through_url = Gtk::LabeledEntry.new 'Link (optional)'
+      @photo_caption = Gtk::LabeledTextView.new 'Caption'
 
       page = Gtk::VBox.new false, 4
       page.set_border_width 8
-      page.pack_with_label 'File', photo_data
-      page.pack_with_label 'Source', @photo_source
-      page.pack_with_label 'Caption', photo_caption, true
-      page.pack_with_label 'Link (optional)', @photo_click_through_url
+      page.pack_start photo_data, false
+      page.pack_start @photo_source, false
+      page.pack_start scrollable(@photo_caption), true
+      page.pack_start @photo_click_through_url, false
 
       @notebook.add_page_with_tab page, 'Photo'
 
@@ -160,12 +152,12 @@ module Grumblr
         filter.add_mime_type "audio/*"
 
         audio_data = file_chooser_button :audio_data, filter
-        audio_caption = multiline_entry :audio_caption
+        @audio_caption = Gtk::LabeledTextView.new 'Caption (optional)'
 
         page = Gtk::VBox.new false, 4
         page.set_border_width 8
-        page.pack_with_label 'File', audio_data
-        page.pack_with_label 'Caption (optional)', audio_caption, true
+        page.pack_start audio_data, false
+        page.pack_start scrollable(@audio_caption), true
 
         @notebook.add_page_with_tab page, 'Audio'
       end
@@ -173,8 +165,8 @@ module Grumblr
       #
       # Video page
       #
-      @video_embed = Gtk::Entry.new
-      video_caption = multiline_entry :video_caption
+      @video_embed = Gtk::LabeledEntry.new 'Embed code / YouTube link'
+      @video_caption = Gtk::LabeledTextView.new 'Caption (optional)'
 
       page = Gtk::VBox.new false, 4
       page.set_border_width 8
@@ -185,14 +177,14 @@ module Grumblr
         filter.add_mime_type "video/*"
 
         video_data = file_chooser_button :video_data, filter
-        @video_title = Gtk::Entry.new
+        @video_title = Gtk::LabeledEntry.new 'Title (optional)'
 
-        page.pack_with_label 'File', video_data
-        page.pack_with_label 'Title (optional)', @video_title
+        page.pack_start video_data, false
+        page.pack_start @video_title, true
       end
 
-      page.pack_with_label 'Embed code / YouTube link', @video_embed
-      page.pack_with_label 'Caption (optional)', video_caption, true
+      page.pack_start @video_embed, false
+      page.pack_start scrollable(@video_caption), true
 
       @notebook.add_page_with_tab page, 'Video'
 
@@ -266,13 +258,21 @@ module Grumblr
         post
       end
 
-      @tags = Gtk::Entry.new
-      
+      @tags = Gtk::LabeledEntry.new 'space/comma separated tags'
+
+      @format = Gtk::CheckButton.new '_markdown'
+      @format.set_active $cfg.get(:format_markdown)
+      @format.signal_connect(:toggled) do |widget|
+        $cfg.set :format_markdown, widget.active?
+      end
+      format_box = Gtk::HBox.new false, 8
+      format_box.pack_start @format, false
+
       button_box = Gtk::HBox.new false, 4
       button_box.pack_start clear_button, false
       button_box.pack_start @private_button, false
-      button_box.pack_start Gtk::Label.new('Tags'), false
       button_box.pack_start @tags, true
+      button_box.pack_start format_box, false
       button_box.pack_start submit_button, true
 
       ##
@@ -356,22 +356,6 @@ module Grumblr
       instance_variable_set "@#{name}", button
     end
 
-    def multiline_entry(name)
-      instance_variable_set "@#{name}", Gtk::TextBuffer.new
-
-      view = Gtk::TextView.new
-      view.set_buffer instance_variable_get("@#{name}")
-      view.set_wrap_mode Gtk::TextTag::WRAP_WORD
-      view.set_right_margin 5
-      view.set_left_margin 5
-
-      window = Gtk::ScrolledWindow.new
-      window.set_shadow_type Gtk::SHADOW_IN
-      window.set_policy Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC
-      window.add view
-      window.show_all
-    end
-
     def reset_fields_for(fieldset, message_type)
       for key in fieldset[message_type]
         name = "@#{message_type}_#{key.gsub(/-/,'_')}"
@@ -388,6 +372,15 @@ module Grumblr
       end
       @tags.clear
     end
+
+    def scrollable(widget)
+      scroll = Gtk::ScrolledWindow.new
+      scroll.set_shadow_type Gtk::SHADOW_IN
+      scroll.set_policy Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC
+      scroll.add widget
+      scroll.show_all
+    end
+
   end
 
   class MessageDialog < Gtk::Dialog
@@ -561,50 +554,128 @@ module Grumblr
   end
 end
 
-class Gtk::Box
-  def pack_with_label(text, widget, expand = false)
-    label = Gtk::Label.new text, true
-    label.set_alignment 0.0, 0.5
-    label.set_mnemonic_widget widget
-    self.pack_start label, false
-    self.pack_start widget, expand
+
+module Gtk
+
+  DARK = Gdk::Color.parse("#000000")
+  PALE = Gdk::Color.parse("#999999")
+
+  class Box
+    def pack_with_label(text, widget, expand = false)
+      label = Gtk::Label.new text, true
+      label.set_alignment 0.0, 0.5
+      label.set_mnemonic_widget widget
+      self.pack_start label, false
+      self.pack_start widget, expand
+    end
   end
-end
 
-class Gtk::Entry
-  alias :get_value :text
-  def clear
-    self.set_text ''
+  class CheckButton
+    def get_value
+      self.active?
+    end
   end
-end
 
-module Gtk::FileChooser
-  alias :get_value :filename
-  alias :clear :unselect_all
-end
-
-class Gtk::Notebook
-  def add_page_with_tab(page, text)
-    filename = File.join(Grumblr::DATA_ROOT, 'pixmaps', '%s.bmp' % text.downcase)
-    icon = Gtk::Image.new filename
-    icon.set_padding 2, 4
-
-    label = Gtk::Label.new '_' + text, true
-    label.set_alignment 0.0, 0.5
-    label.set_padding 4, 2
-
-    box = Gtk::HBox.new false, 4
-    box.pack_start icon, false
-    box.pack_start label, true
-    box.show_all
-
-    self.append_page_menu page, box, label
+  class ComboBox
+    alias :get_value :active_text
   end
-end
 
-class Gtk::TextBuffer
-  alias :get_value :get_text
-  def clear
-    self.set_text ''
+  class Entry
+    alias :get_value :text
+    def clear
+      self.set_text ''
+    end
   end
+
+  module FileChooser
+    alias :get_value :filename
+    alias :clear :unselect_all
+  end
+
+  class Notebook
+    def add_page_with_tab(page, text)
+      filename = File.join(Grumblr::DATA_ROOT, 'pixmaps', '%s.bmp' % text.downcase)
+      icon = Gtk::Image.new filename
+      icon.set_padding 4, 0
+
+      label = Gtk::Label.new '_' + text, true
+      label.set_alignment 0.0, 0.5
+      label.set_padding 2, 2
+
+      box = Gtk::HBox.new false, 2
+      box.pack_start icon, false
+      box.pack_start label, true
+      box.show_all
+
+      self.append_page_menu page, box, label
+    end
+  end
+
+  class TextView
+    def get_value
+      self.buffer.get_text
+    end
+    def clear
+      self.buffer.set_text ''
+    end
+  end
+
+  class LabeledEntry < Entry
+    def initialize(label)
+      @label = label
+      super()
+      self.modify_text Gtk::STATE_NORMAL, PALE
+      self.set_text @label
+      self.signal_connect(:focus_in_event) do |widget, type|
+        if widget.text == @label
+          widget.modify_text Gtk::STATE_NORMAL, DARK
+          widget.set_text ''
+        end
+        false
+      end
+      self.signal_connect(:focus_out_event) do |widget, type|
+        if widget.text == ''
+          widget.modify_text Gtk::STATE_NORMAL, PALE
+          widget.set_text @label
+        end
+        false
+      end
+      self.show
+    end
+    def get_value
+      value = self.text
+      value == @label ? "" : value
+    end
+  end
+
+  class LabeledTextView < TextView
+    def initialize(label)
+      @label = label
+      super()
+      self.set_wrap_mode Gtk::TextTag::WRAP_WORD
+      self.set_right_margin 5
+      self.set_left_margin 5
+      self.modify_text Gtk::STATE_NORMAL, PALE
+      self.buffer.set_text @label
+      self.signal_connect(:focus_in_event) do |widget, type|
+        if widget.buffer.text == @label
+          widget.modify_text Gtk::STATE_NORMAL, DARK
+          widget.buffer.set_text ''
+        end
+        false
+      end
+      self.signal_connect(:focus_out_event) do |widget, type|
+        if widget.buffer.text == ''
+          widget.modify_text Gtk::STATE_NORMAL, PALE
+          widget.buffer.set_text @label
+        end
+        false
+      end
+    end
+    def get_value
+      value = self.buffer.get_text
+      value == @label ? "" : value
+    end
+  end
+
 end
