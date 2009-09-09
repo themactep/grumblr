@@ -653,6 +653,7 @@ module Gtk
       @label = label
       super()
       self.set_wrap_mode Gtk::TextTag::WRAP_WORD
+      self.set_accepts_tab false
       self.set_right_margin 5
       self.set_left_margin 5
       self.modify_text Gtk::STATE_NORMAL, PALE
