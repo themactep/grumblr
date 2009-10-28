@@ -16,7 +16,8 @@ module Grumblr
       filename = File.join(Grumblr::DATA_ROOT, 'pixmaps', 'grumblr.svg')
       self.logo = Gdk::Pixbuf.new(filename, 128, 128)
       
-      set_size_request 440, 320
+      set_size_request 440, 340
+      set_border_width 4
       set_allow_shrink false
       set_title 'Grumblr'
       set_icon self.logo
@@ -51,21 +52,15 @@ module Grumblr
     def initialize
       super false, 4
 
-      ##
       ### Statusbar
-      ##
-      @statusbar = Gtk::Statusbar.new
+      $statusbar = Gtk::Statusbar.new
 
-      ##
       ### Notebook
-      ##
       @notebook = Gtk::Notebook.new
       @notebook.set_homogeneous true
       @notebook.set_tab_pos Gtk::POS_LEFT
 
-      #
       # Text page
-      #
       @text_title = Gtk::LabeledEntry.new 'Title (optional)'
 
       @text_body  = Gtk::LabeledTextView.new 'Body'
@@ -77,9 +72,7 @@ module Grumblr
 
       @notebook.add_page_with_tab page, 'Text'
 
-      #
       # Link page
-      #
       @link_url = Gtk::LabeledEntry.new 'URL'
       @link_name = Gtk::LabeledEntry.new 'Name (optional)'
       @link_description = Gtk::LabeledTextView.new 'Description (optional)'
@@ -96,9 +89,7 @@ module Grumblr
 
       @notebook.add_page_with_tab page, 'Link'
 
-      #
       # Chat page
-      #
       @chat_title = Gtk::LabeledEntry.new 'Title (optional)'
       @chat_conversation = Gtk::LabeledTextView.new 'Conversation'
 
@@ -109,9 +100,7 @@ module Grumblr
 
       @notebook.add_page_with_tab page, 'Chat'
 
-      #
       # Quote page
-      #
       @quote_source = Gtk::LabeledEntry.new 'Source (optional)'
       @quote_quote = Gtk::LabeledTextView.new 'Quote'
 
@@ -122,9 +111,7 @@ module Grumblr
 
       @notebook.add_page_with_tab page, 'Quote'
 
-      #
       # Photo page
-      #
       filter = Gtk::FileFilter.new
       filter.set_name "Images"
       filter.add_mime_type "image/*"
@@ -143,9 +130,7 @@ module Grumblr
 
       @notebook.add_page_with_tab page, 'Photo'
 
-      #
       # Audio page
-      #
       if $api.user.can_upload_audio == '1'
         filter = Gtk::FileFilter.new
         filter.set_name "Audio"
@@ -162,9 +147,7 @@ module Grumblr
         @notebook.add_page_with_tab page, 'Audio'
       end
 
-      #
       # Video page
-      #
       @video_embed = Gtk::LabeledEntry.new 'Embed code / YouTube link'
       @video_caption = Gtk::LabeledTextView.new 'Caption (optional)'
 
@@ -188,10 +171,7 @@ module Grumblr
 
       @notebook.add_page_with_tab page, 'Video'
 
-      ##
       ### Toolbar
-      ##
-
       toolbar = Gtk::Toolbar.new
       toolbar.icon_size = Gtk::IconSize::MENU
 
@@ -220,7 +200,7 @@ module Grumblr
       combo.signal_connect(:changed) do |widget|
         $app.blog = $api.blogs[widget.active]
         $cfg.set :active_blog, $app.blog.name
-        @statusbar.push 0, $app.blog.title
+        $statusbar.push 0, $app.blog.title
       end
       combo.set_active(active_blog_idx)
       item =  Gtk::ToolItem.new
@@ -236,9 +216,7 @@ module Grumblr
       end
       toolbar.insert 3, item
 
-      ##
       ### Buttons
-      ##
       clear_button = Gtk::Button.new 'Clear'
       clear_button.set_focus_on_click false
       clear_button.signal_connect(:clicked) do |widget|
@@ -275,13 +253,12 @@ module Grumblr
       button_box.pack_start format_box, false
       button_box.pack_start submit_button, true
 
-      ##
       ### Layout
-      ##
       pack_start toolbar, false
       pack_start @notebook
       pack_start button_box, false
-      pack_start @statusbar, false
+      pack_start $statusbar, false
+
       show_all
     end
 
@@ -516,9 +493,7 @@ module Grumblr
       Gtk::SeparatorMenuItem.new
     end
 
-    ##
     ## Destroy Config
-    ##
     def destroy_account
       icon = Gtk::ImageMenuItem.new 'Destroy account'
       icon.set_image Gtk::Image.new(Gtk::Stock::STOP, Gtk::IconSize::MENU)
@@ -615,9 +590,6 @@ module Gtk
     def get_value
       self.buffer.get_text
     end
-    def clear
-      self.buffer.set_text ''
-    end
   end
 
   class LabeledEntry < Entry
@@ -634,17 +606,20 @@ module Gtk
         false
       end
       self.signal_connect(:focus_out_event) do |widget, type|
-        if widget.text == ''
-          widget.modify_text Gtk::STATE_NORMAL, PALE
-          widget.set_text @label
-        end
+        widget.clear if widget.text == ''
         false
       end
       self.show
     end
+
     def get_value
       value = self.text
       value == @label ? "" : value
+    end
+
+    def clear
+      self.modify_text Gtk::STATE_NORMAL, PALE
+      self.set_text @label
     end
   end
 
@@ -663,19 +638,32 @@ module Gtk
           widget.modify_text Gtk::STATE_NORMAL, DARK
           widget.buffer.set_text ''
         end
+        report_length
         false
       end
       self.signal_connect(:focus_out_event) do |widget, type|
-        if widget.buffer.text == ''
-          widget.modify_text Gtk::STATE_NORMAL, PALE
-          widget.buffer.set_text @label
-        end
+        self.clear if widget.buffer.text == ''
+        $statusbar.push 0, $app.blog.title
+        false
+      end
+      self.signal_connect(:key_release_event) do |widget, type|
+        report_length
         false
       end
     end
+
+    def report_length
+      $statusbar.push 0, "Length: #{self.buffer.text.size}"
+    end
+
     def get_value
       value = self.buffer.get_text
       value == @label ? "" : value
+    end
+
+    def clear
+      self.modify_text Gtk::STATE_NORMAL, PALE
+      self.buffer.set_text @label
     end
   end
 
