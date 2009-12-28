@@ -653,7 +653,7 @@ module Gtk
     end
 
     def report_length
-      $statusbar.push 0, "Length: #{self.buffer.text.size}"
+      $statusbar.push 0, "Length: #{self.buffer.text.chars.count}"
     end
 
     def get_value
