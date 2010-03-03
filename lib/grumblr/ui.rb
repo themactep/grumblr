@@ -495,7 +495,7 @@ module Grumblr
 
     ## Destroy Config
     def destroy_account
-      icon = Gtk::ImageMenuItem.new 'Destroy account'
+      icon = Gtk::ImageMenuItem.new 'Forget password'
       icon.set_image Gtk::Image.new(Gtk::Stock::STOP, Gtk::IconSize::MENU)
       icon.signal_connect(:activate) do
         $cfg.destroy
