@@ -54,9 +54,10 @@ module Ppds
     end
 
     def query(action, data)
-      RestClient.post(API_URL + action, data)
-    rescue RestClient::RequestFailed
-      raise 'Query failed: %s' % $!
+      raise 'Cannot authenticate without credentials' unless data[:email] and data[:password]
+      RestClient.post(API_URL + action, data) { |response| response.body }
+    rescue RestClient::RequestFailed => e
+      raise 'Query failed: %s' % e.response.body
     rescue RestClient::RequestTimeout
       raise 'Timeout occured'
     rescue Exception
@@ -78,7 +79,8 @@ module Ppds
 
       true
 
-    rescue Exception
+    rescue Exception => e
+      puts e
       false
     end
   end
