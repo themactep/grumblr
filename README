@@ -19,7 +19,7 @@ Grumblr is a tool to post messages to your Tumblr blog from GNOME.
     http://libxml.rubyforge.org/
 
   * REST Client
-    http://github.com/adamwiggins/rest-client/
+    http://github.com/archiloque/rest-client
 
 
 === Installation ===
