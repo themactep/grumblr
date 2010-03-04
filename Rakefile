@@ -24,7 +24,7 @@ spec = Gem::Specification.new do |s|
   s.bindir = "bin"
   s.add_dependency "ppds-libs"
   s.add_dependency "libxml-ruby"
-  s.add_dependency "rest-client"
+  s.add_dependency "rest-client", '>= 1.3.0'
 end
 
 Rake::GemPackageTask.new(spec) do |p|
