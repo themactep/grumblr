@@ -2,6 +2,7 @@ require 'gtk2'
 
 module Grumblr
 
+  APP_NAME  = 'Grumblr'
   APP_ROOT  = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
   DATA_ROOT = File.join(APP_ROOT, 'data')
   VERSION   = File.open(File.join(APP_ROOT,'VERSION')) { |f| f.read }
@@ -19,7 +20,7 @@ module Grumblr
       set_size_request 440, 340
       set_border_width 4
       set_allow_shrink false
-      set_title 'Grumblr'
+      set_title Grumblr::APP_NAME
       set_icon self.logo
       set_default_width $cfg.get(:window_width).to_i
       set_default_height $cfg.get(:window_height).to_i
@@ -27,17 +28,19 @@ module Grumblr
       signal_connect(:destroy) { quit }
       signal_connect(:delete_event) { minimize }
       signal_connect(:check_resize) do |widget|
-        x, y = widget.position
-        w, h = widget.size
-        $cfg.set :window_x_pos, x
-        $cfg.set :window_y_pos, y
-        $cfg.set :window_width, w
-        $cfg.set :window_height, h
+        position_x, position_y = widget.position
+        size_w, size_h = widget.size
+        $cfg.set :window_x_pos, position_x
+        $cfg.set :window_y_pos, position_y
+        $cfg.set :window_width, size_w
+        $cfg.set :window_height, size_h
       end
       signal_connect(:window_state_event) do |widget, e|
         case e.event_type
         when Gdk::Event::WINDOW_STATE
           minimize if e.changed_mask.iconified? and e.new_window_state.iconified?
+        else
+          nil
         end
       end
       show
@@ -310,9 +313,10 @@ module Grumblr
 
     def collect_data_for(fieldset, message_type)
       data = {}
-      for key in fieldset[message_type]
+      fieldset[message_type].each do |key|
         name = "@#{message_type}_#{key.gsub(/-/,'_')}"
-        if var = instance_variable_get(name)
+        var = instance_variable_get(name)
+        if var
           value = var.get_value
           data.merge!({ key => value })
         end
@@ -334,7 +338,7 @@ module Grumblr
     end
 
     def reset_fields_for(fieldset, message_type)
-      for key in fieldset[message_type]
+      fieldset[message_type].each do |key|
         name = "@#{message_type}_#{key.gsub(/-/,'_')}"
         var = instance_variable_get(name)
         var.clear if var
@@ -451,7 +455,7 @@ module Grumblr
       end
       super
       self.logo          = $gui.logo
-      self.program_name  = 'Grumblr'
+      self.program_name  = Grumblr::APP_NAME
       self.version       = Grumblr::VERSION
       self.copyright     = "Copyright (c)2009, Paul Philippov"
       self.comments      = "Tumblr companion for GNOME"
@@ -483,7 +487,7 @@ module Grumblr
 
     def menu
       menu = Gtk::Menu.new
-      for item in [ ontop, sep, destroy_account, sep, about, sep, quit ]
+      [ ontop, sep, destroy_account, sep, about, sep, quit ].each do |item|
         menu.append item
       end
       menu.show_all
