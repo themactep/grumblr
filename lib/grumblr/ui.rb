@@ -163,7 +163,7 @@ module Grumblr
         @video_title = Gtk::LabeledEntry.new 'Title (optional)'
 
         page.pack_start video_data, false
-        page.pack_start @video_title, true
+        page.pack_start @video_title, false
       end
 
       page.pack_start @video_embed, false
