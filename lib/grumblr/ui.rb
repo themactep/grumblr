@@ -220,7 +220,7 @@ module Grumblr
       toolbar.insert 3, item
 
       ### Buttons
-      clear_button = Gtk::Button.new 'Clear'
+      clear_button = Gtk::Button.new ' Clear '
       clear_button.set_focus_on_click false
       clear_button.signal_connect(:clicked) do |widget|
         page = @notebook.get_nth_page @notebook.page
@@ -228,13 +228,13 @@ module Grumblr
         reset_form message_type.downcase
       end
 
-      @private_button = Gtk::ToggleButton.new 'Private'
+      @private_button = Gtk::ToggleButton.new ' Private '
       @private_button.signal_connect(:toggled) do |widget|
         $cfg.set :private, widget.active?
       end
       @private_button.set_active $cfg.get(:private)
 
-      submit_button = Gtk::Button.new 'Send'
+      submit_button = Gtk::Button.new '  Send  '
       submit_button.signal_connect(:released) do |widget|
         post
       end
@@ -254,7 +254,7 @@ module Grumblr
       button_box.pack_start @private_button, false
       button_box.pack_start @tags, true
       button_box.pack_start format_box, false
-      button_box.pack_start submit_button, true
+      button_box.pack_start submit_button, false
 
       ### Layout
       pack_start toolbar, false
