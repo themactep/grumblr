@@ -55,7 +55,8 @@ module Ppds
 
     def query(action, data)
       raise 'Cannot authenticate without credentials' unless data[:email] and data[:password]
-      RestClient.post(API_URL + action, data) { |response| response.body }
+      response = RestClient.post(API_URL + action, data)
+      response.to_str
     rescue RestClient::RequestFailed => e
       raise 'Query failed: %s' % e.response.body
     rescue RestClient::RequestTimeout
