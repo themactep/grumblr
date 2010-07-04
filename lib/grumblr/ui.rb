@@ -18,7 +18,7 @@ module Grumblr
       self.logo = Gdk::Pixbuf.new(filename, 128, 128)
       
       set_size_request 440, 340
-      set_border_width 4
+      set_border_width 0
       set_allow_shrink false
       set_title Grumblr::APP_NAME
       set_icon self.logo
@@ -637,6 +637,7 @@ module Gtk
       self.set_left_margin 5
       self.modify_text Gtk::STATE_NORMAL, PALE
       self.buffer.set_text @label
+
       self.signal_connect(:focus_in_event) do |widget, type|
         if widget.buffer.text == @label
           widget.modify_text Gtk::STATE_NORMAL, DARK
@@ -644,12 +645,14 @@ module Gtk
         end
         report_length
         false
-      end
+     end
+
       self.signal_connect(:focus_out_event) do |widget, type|
         self.clear if widget.buffer.text == ''
         $statusbar.push 0, $app.blog.title
         false
       end
+
       self.signal_connect(:key_release_event) do |widget, type|
         report_length
         false
@@ -658,6 +661,7 @@ module Gtk
 
     def report_length
       $statusbar.push 0, "Length: #{self.buffer.text.chars.count}"
+      self.buffer.text.strip
     end
 
     def get_value

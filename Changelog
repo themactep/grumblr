@@ -1,3 +1,8 @@
+version 2.3.0 (2010-07-04)
+
+  * Fixed layout of video panel
+  * Fixed authentication to work with rest-client 1.6.0
+
 version 2.2.0 (2010-03-03)
 
   * Fixed authentication to work with rest-client 1.3.0+
