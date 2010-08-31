@@ -1,3 +1,6 @@
+version 2.3.1 (2010-09-01)
+  * Fixed unicode characters counter
+
 version 2.3.0 (2010-07-04)
 
   * Fixed layout of video panel
