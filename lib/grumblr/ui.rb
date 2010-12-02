@@ -311,6 +311,8 @@ module Grumblr
 
       data.update({:data => File.read(data['data'])}) if data.has_key?('data') and data['data'] != ""
 
+      dump(data) if DEBUG
+
       $api.query 'write', data
       MessageDialog.new "Message posted", Gtk::Stock::DIALOG_INFO
       reset_form message_type
