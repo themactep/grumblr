@@ -1,5 +1,6 @@
 require 'gtk2'
 require 'open-uri'
+require 'ftools'
 
 module Grumblr
 
@@ -387,12 +388,15 @@ module Grumblr
     end
 
     def pixbuffer_from_url(url)
+      cache_dir = File.expand_path(File.join('~', '.cache', Grumblr::APP_NAME.downcase))
+      FileUtils.mkdir_p(cache_dir) unless File.directory?(cache_dir)
+      file = File.join(cache_dir, File.basename(url))
+      File.open(file, 'w') { |f| f.write(open(url).read) } unless File.exists?(file)
       pb = Gdk::PixbufLoader.new
       pb.set_size 16, 16
-      pb.last_write(open(url) { |f| f.read })
+      pb.last_write(open(file) { |f| f.read })
       pb.pixbuf
     end
-
   end
 
   class MessageDialog < Gtk::Dialog
