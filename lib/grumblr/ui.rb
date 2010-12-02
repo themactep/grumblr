@@ -3,6 +3,7 @@ require 'gtk2'
 module Grumblr
 
   APP_NAME  = 'Grumblr'
+  APP_MOTTO = 'a Tumblr companion'
   APP_ROOT  = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
   DATA_ROOT = File.join(APP_ROOT, 'data')
   VERSION   = File.open(File.join(APP_ROOT,'VERSION')) { |f| f.read }
@@ -293,7 +294,7 @@ module Grumblr
         :password   => $cfg.get(:password),
         :channel_id => $app.blog.name,
         :type       => message_type,
-        :generator  => APP_NAME << " " << VERSION,
+        :generator  => "#{Grumblr::APP_NAME} #{Grumblr::VERSION}",
         :private    => @private_button.active? ? 1 : 0,
         :tags       => tags.join(','),
         :format     => @format.active? ? 'markdown' : 'html',
@@ -463,8 +464,8 @@ module Grumblr
       self.logo          = $gui.logo
       self.program_name  = Grumblr::APP_NAME
       self.version       = Grumblr::VERSION
+      self.comments      = Grumblr::APP_MOTTO
       self.copyright     = "Copyright (c)2009, Paul Philippov"
-      self.comments      = "Tumblr companion for GNOME"
       self.license       = "New BSD License.\nhttp://creativecommons.org/licenses/BSD/"
       self.website       = "http://themactep.com/grumblr/"
       self.authors       = ['Paul Philippov <themactep@gmail.com>']
@@ -476,8 +477,8 @@ module Grumblr
   class StatusIcon < Gtk::StatusIcon
     def initialize
       super
-      self.file = File.join(Grumblr::DATA_ROOT, 'pixmaps', 'grumblr.svg')
-      self.tooltip = "Application Name Goes Here"
+      self.icon_name = 'grumblr'
+      self.tooltip = "#{Grumblr::APP_NAME} #{Grumblr::VERSION}"
       self.signal_connect(:activate) do
         if $gui.visible?
           $gui.minimize

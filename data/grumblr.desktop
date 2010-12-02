@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Grumblr
-Comment=Tumblr companion for GNOME
+Comment=a Tumblr companion
 Exec=grumblr
 Icon=grumblr
 StartupNotify=true

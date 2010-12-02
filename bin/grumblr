@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 #
 =begin
-  Grumblr - Tumblr companion for GNOME.
+  Grumblr - a Tumblr companion.
 
   Copyright (c) 2009, Paul Philippov <themactep@gmail.com>
 
