@@ -4,13 +4,36 @@ require 'xml'
 
 module Ppds
   class User < ClassFactory
-    attr_accessor :default_post_format, :can_upload_audio, :can_upload_aiff,
-                  :can_upload_video, :vimeo_login_url, :max_video_bytes_uploaded
+    attr_accessor :can_ask_question,
+                  :can_upload_aiff,
+                  :can_upload_audio,
+                  :can_upload_video,
+                  :default_post_format,
+                  :liked_post_count,
+                  :max_video_bytes_uploaded,
+                  :vimeo_login_url
   end
 
   class Blog < ClassFactory
-    attr_accessor :type, :title, :name, :url, :avatar_url,
-                  :is_primary, :private_id
+    attr_accessor :avatar_url,
+                  :backup_post_limit,
+                  :draft_count,
+                  :followers,
+                  :is_admin,
+                  :is_primary,
+                  :messages_count,
+                  :name,
+                  :posts,
+                  :private_id,
+                  :queue_count,
+                  :title,
+                  :twitter_enabled,
+                  :type,
+                  :url,
+                # with include-theme=1:
+                  :description,
+                  :custom_css,
+                  :theme_source
   end
 
   class Tumblr
