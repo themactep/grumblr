@@ -1,7 +1,8 @@
 == Grumblr ==
 
-Grumblr is an apploication to post messages to your Tumblr blog
-from a GTK-enabled Linux desktop.
+Grumblr is an application to post messages to Tumblr blogs
+from a GTK-enabled Linux desktop environment.
+
 
 === Licence ===
 
@@ -25,8 +26,15 @@ from a GTK-enabled Linux desktop.
 
 === Installation ===
 
+  Install the most recent grumblr gem with rubygems, as usual:
+
   $ sudo gem install grumblr
 
+  Change directory to the installed gem folder (may vary) and run
+  setup script to copy images and a launcher to their places:
+
+  $ cd /usr/lib/ruby/gems/1.8./gems/grumblr-2.3.3
+  $ sudo ruby setup.rb
 
 === Homepage ===
 

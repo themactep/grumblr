@@ -1,3 +1,8 @@
+version 2.3.3 (2010-12-02)
+  * Added avatar icons to blog selector.
+  * Added setup script
+  * Changed system tray to use theme icon if exists.
+
 version 2.3.2 (2010-12-02)
   * Added a field for externally hosted MP3 files.
 
