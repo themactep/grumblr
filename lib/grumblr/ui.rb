@@ -289,15 +289,19 @@ module Grumblr
       tags = @tags.get_value.gsub(/\s+/,',').split(',').uniq.sort - ['']
 
       data = {
-        :generator  => 'Grumblr',
         :email      => $cfg.get(:email),
         :password   => $cfg.get(:password),
         :channel_id => $app.blog.name,
-        :group      => $app.blog.name + '.tumblr.com',
         :type       => message_type,
+        :generator  => APP_NAME << " " << VERSION,
+        :private    => @private_button.active? ? 1 : 0,
         :tags       => tags.join(','),
         :format     => @format.active? ? 'markdown' : 'html',
-        :private    => @private_button.active? ? 1 : 0
+        :group      => $app.blog.name + '.tumblr.com',
+        #:slug       => ,
+        #:state      => , # published, draft, submission, queue
+        #:publish_on => , # e.g. publish-on=2010-01-01T13:34:00
+        #:send-to-twitter => , # no, auto, "message"
       }
 
       data.merge! mandatory_data
