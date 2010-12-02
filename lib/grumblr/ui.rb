@@ -1,4 +1,5 @@
 require 'gtk2'
+require 'open-uri'
 
 module Grumblr
 
@@ -195,11 +196,25 @@ module Grumblr
       end
       toolbar.insert 1, item
 
-      combo = Gtk::ComboBox.new
+      ### Blog selection combo
+      model = Gtk::ListStore.new(Gdk::Pixbuf, String)
+      combo = Gtk::ComboBox.new(model)
+
+      renderer = Gtk::CellRendererPixbuf.new
+      renderer.width = 24
+      combo.pack_start(renderer, false)
+      combo.set_attributes(renderer, :pixbuf => 0)
+
+      renderer = Gtk::CellRendererText.new
+      combo.pack_start(renderer, true)
+      combo.set_attributes(renderer, :text => 1)
+
       active_blog = $cfg.get(:active_blog) || nil
       active_blog_idx = nil
       $api.blogs.each_with_index do |blog, idx|
-        combo.append_text blog.title
+        iter = model.append
+        iter[0] = pixbuffer_from_url(blog.avatar_url)
+        iter[1] = blog.title
         active_blog_idx = idx if blog.name.eql?(active_blog)
         active_blog_idx = idx if active_blog_idx.nil? and blog.is_primary == "yes"
       end
@@ -369,6 +384,13 @@ module Grumblr
       scroll.set_policy Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC
       scroll.add widget
       scroll.show_all
+    end
+
+    def pixbuffer_from_url(url)
+      pb = Gdk::PixbufLoader.new
+      pb.set_size 16, 16
+      pb.last_write(open(url) { |f| f.read })
+      pb.pixbuf
     end
 
   end
