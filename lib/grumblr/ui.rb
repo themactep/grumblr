@@ -140,11 +140,13 @@ module Grumblr
         filter.add_mime_type "audio/*"
 
         audio_data = file_chooser_button :audio_data, filter
+        @audio_externally_hosted_url = Gtk::LabeledEntry.new 'Externally Hosted MP3 URL'
         @audio_caption = Gtk::LabeledTextView.new 'Caption (optional)'
 
         page = Gtk::VBox.new false, 4
         page.set_border_width 8
         page.pack_start audio_data, false
+        page.pack_start @audio_externally_hosted_url, false
         page.pack_start scrollable(@audio_caption), true
 
         @notebook.add_page_with_tab page, 'Audio'

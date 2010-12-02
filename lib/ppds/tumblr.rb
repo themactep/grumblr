@@ -23,7 +23,7 @@ module Ppds
       'quote' => ['quote'],
       'photo' => [],
       'video' => [],
-      'audio' => ['data']
+      'audio' => []
     }
 
     CONCURENT_FIELDS = {
@@ -33,7 +33,7 @@ module Ppds
       'quote' => [],
       'photo' => ['source', 'data'],
       'video' => ['embed', 'data'],
-      'audio' => []
+      'audio' => ['data', 'externally-hosted-url']
     }
 
     OPTIONAL_FIELDS  = {
