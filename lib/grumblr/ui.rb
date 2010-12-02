@@ -21,7 +21,7 @@ module Grumblr
       set_size_request 440, 340
       set_border_width 0
       set_allow_shrink false
-      set_title Grumblr::APP_NAME
+      set_title "#{Grumblr::APP_NAME} #{Grumblr::VERSION}"
       set_icon self.logo
       set_default_width $cfg.get(:window_width).to_i
       set_default_height $cfg.get(:window_height).to_i
