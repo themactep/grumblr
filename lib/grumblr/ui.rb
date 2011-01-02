@@ -127,10 +127,24 @@ module Grumblr
       @photo_click_through_url = Gtk::LabeledEntry.new 'Link (optional)'
       @photo_caption = Gtk::LabeledTextView.new 'Caption'
 
+photo_source_tabs = Gtk::Notebook.new
+p = Gtk::VBox.new false, 4
+p.set_border_width 8
+p.pack_start photo_data, false
+photo_source_tabs.add_page_with_tab p, 'File'
+
+p = Gtk::VBox.new false, 4
+p.set_border_width 8
+p.pack_start @photo_source, false
+photo_source_tabs.add_page_with_tab p, 'URL'
+
       page = Gtk::VBox.new false, 4
       page.set_border_width 8
-      page.pack_start photo_data, false
-      page.pack_start @photo_source, false
+
+#      page.pack_start photo_data, false
+#      page.pack_start @photo_source, false
+      page.pack_start photo_source_tabs, false
+
       page.pack_start scrollable(@photo_caption), true
       page.pack_start @photo_click_through_url, false
 
@@ -143,7 +157,7 @@ module Grumblr
         filter.add_mime_type "audio/*"
 
         audio_data = file_chooser_button :audio_data, filter
-        @audio_externally_hosted_url = Gtk::LabeledEntry.new 'Externally Hosted MP3 URL'
+        @audio_externally_hosted_url = Gtk::LabeledEntry.new 'Externally hosted MP3 URL'
         @audio_caption = Gtk::LabeledTextView.new 'Caption (optional)'
 
         page = Gtk::VBox.new false, 4
@@ -349,8 +363,27 @@ module Grumblr
       data
     end
 
+    def file_chooser_dialog(name, filter = nil)
+      chooser = Gtk::FileChooserDialog.new("Open File", nil,
+                                           Gtk::FileChooser::ACTION_OPEN, nil,
+                                           [Gtk::Stock::CANCEL, Gtk::Dialog::RESPONSE_CANCEL],
+                                           [Gtk::Stock::OPEN, Gtk::Dialog::RESPONSE_ACCEPT])
+      chooser.set_select_multiple(true)
+      chooser.set_current_folder(ENV['HOME'])
+      if filter
+        chooser.add_filter(filter)
+        chooser.set_filter(filter)
+      end
+      chooser.signal_connect(:selection_changed) do |widget|
+        puts widget.filenames
+      end
+      chooser.show_all
+      instance_variable_set "@#{name}", chooser
+    end
+
     def file_chooser_button(name, filter = nil)
       button = Gtk::FileChooserButton.new('Open', Gtk::FileChooser::ACTION_OPEN)
+      button.set_current_folder(ENV['HOME'])
       if filter
         button.add_filter(filter)
         button.set_filter(filter)
