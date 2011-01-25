@@ -71,6 +71,8 @@ module Ppds
 
     API_URL = 'http://www.tumblr.com/api/'
 
+    DEFAULT_AVATAR = 'http://assets.tumblr.com/images/default_avatar_128.gif'
+
     def initialize
       self.user = nil
       self.blogs = []

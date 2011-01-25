@@ -214,6 +214,7 @@ module Grumblr
       active_blog_idx = nil
       $api.blogs.each_with_index do |blog, idx|
         iter = model.append
+        blog.avatar_url ||= Ppds::Tumblr::DEFAULT_AVATAR
         iter[0] = pixbuffer_from_url(blog.avatar_url)
         iter[1] = blog.title
         active_blog_idx = idx if blog.name.eql?(active_blog)
