@@ -1,3 +1,6 @@
+version 2.3.4 (2011-01-25)
+  * Display a default Tumblr avatar for blogs that don't have any.
+
 version 2.3.3 (2010-12-02)
   * Added avatar icons to blog selector.
   * Added setup script
@@ -7,16 +10,16 @@ version 2.3.2 (2010-12-02)
   * Added a field for externally hosted MP3 files.
 
 version 2.3.1 (2010-09-01)
-  * Fixed unicode characters counter
+  * Fixed unicode characters counter.
 
 version 2.3.0 (2010-07-04)
 
-  * Fixed layout of video panel
-  * Fixed authentication to work with rest-client 1.6.0
+  * Fixed layout of video panel.
+  * Fixed authentication to work with rest-client 1.6.0.
 
 version 2.2.0 (2010-03-03)
 
-  * Fixed authentication to work with rest-client 1.3.0+
+  * Fixed authentication to work with rest-client 1.3.0+.
 
 version 2.1.0 (2009-09-08)
 
@@ -27,7 +30,7 @@ version 2.1.0 (2009-09-08)
 version 2.0.1 (2009-08-26)
 
   * Added Changelog file.
-  * Added external VERSION
+  * Added external VERSION.
   * Tags support. Separated by either comma or space.
 
 version 2.0.0 (2009-08-24)
