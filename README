@@ -33,7 +33,7 @@ from a GTK-enabled Linux desktop environment.
   Change directory to the installed gem folder (may vary) and run
   setup script to copy images and a launcher to their places:
 
-  $ cd /usr/lib/ruby/gems/1.8./gems/grumblr-2.3.3
+  $ cd /usr/lib/ruby/gems/1.8/gems/grumblr-2.3.4
   $ sudo ruby setup.rb
 
 === Homepage ===
