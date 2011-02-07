@@ -20,7 +20,7 @@ module Grumblr
       filename = File.join(Grumblr::DATA_ROOT, 'pixmaps', 'grumblr.svg')
       self.logo = Gdk::Pixbuf.new(filename, 128, 128)
 
-      set_size_request 440, 340
+      set_size_request 480, 360
       set_border_width 0
       set_allow_shrink false
       set_title "#{Grumblr::APP_NAME} #{Grumblr::VERSION}"
@@ -56,39 +56,40 @@ module Grumblr
 
   class Dashboard < Gtk::VBox
     def initialize
-      super false, 4
+      super false, 0
 
       ### Statusbar
       $statusbar = Gtk::Statusbar.new
-
+      $statusbar.set_border_width 2
+      
       ### Notebook
       @notebook = Gtk::Notebook.new
+      @notebook.set_border_width 0
       @notebook.set_homogeneous true
       @notebook.set_tab_pos Gtk::POS_LEFT
 
       # Text page
-      @text_title = Gtk::LabeledEntry.new 'Title (optional)'
+      @text_title = Gtk::LabeledEntry.new('Title (optional)')
+      @text_body  = Gtk::LabeledTextView.new('Body')
 
-      @text_body  = Gtk::LabeledTextView.new 'Body'
-
-      page = Gtk::VBox.new false, 4
-      page.set_border_width 8
+      page = Gtk::VBox.new(false, 4)
+      page.set_border_width 4
       page.pack_start @text_title, false
       page.pack_start scrollable(@text_body), true
 
       @notebook.add_page_with_tab page, 'Text'
 
       # Link page
-      @link_url = Gtk::LabeledEntry.new 'URL'
-      @link_name = Gtk::LabeledEntry.new 'Name (optional)'
-      @link_description = Gtk::LabeledTextView.new 'Description (optional)'
+      @link_url = Gtk::LabeledEntry.new('URL')
+      @link_name = Gtk::LabeledEntry.new('Name (optional)')
+      @link_description = Gtk::LabeledTextView.new('Description (optional)')
       scroll = Gtk::ScrolledWindow.new
       scroll.set_shadow_type Gtk::SHADOW_IN
       scroll.set_policy Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC
       scroll.add @link_description
 
-      page = Gtk::VBox.new false, 4
-      page.set_border_width 8
+      page = Gtk::VBox.new(false, 4)
+      page.set_border_width 4
       page.pack_start @link_url, false
       page.pack_start @link_name, false
       page.pack_start scroll, true
@@ -96,22 +97,22 @@ module Grumblr
       @notebook.add_page_with_tab page, 'Link'
 
       # Chat page
-      @chat_title = Gtk::LabeledEntry.new 'Title (optional)'
-      @chat_conversation = Gtk::LabeledTextView.new 'Conversation'
+      @chat_title = Gtk::LabeledEntry.new('Title (optional)')
+      @chat_conversation = Gtk::LabeledTextView.new('Conversation')
 
-      page = Gtk::VBox.new false, 4
-      page.set_border_width 8
+      page = Gtk::VBox.new(false, 4)
+      page.set_border_width 4
       page.pack_start @chat_title, false
       page.pack_start scrollable(@chat_conversation), true
 
       @notebook.add_page_with_tab page, 'Chat'
 
       # Quote page
-      @quote_source = Gtk::LabeledEntry.new 'Source (optional)'
-      @quote_quote = Gtk::LabeledTextView.new 'Quote'
+      @quote_source = Gtk::LabeledEntry.new('Source (optional)')
+      @quote_quote = Gtk::LabeledTextView.new('Quote')
 
-      page = Gtk::VBox.new false, 4
-      page.set_border_width 8
+      page = Gtk::VBox.new(false, 4)
+      page.set_border_width 4
       page.pack_start scrollable(@quote_quote), true
       page.pack_start @quote_source, false
 
@@ -122,13 +123,13 @@ module Grumblr
       filter.set_name "Images"
       filter.add_mime_type "image/*"
 
-      photo_data = file_chooser_button :photo_data, filter
-      @photo_source = Gtk::LabeledEntry.new 'Source'
-      @photo_click_through_url = Gtk::LabeledEntry.new 'Link (optional)'
-      @photo_caption = Gtk::LabeledTextView.new 'Caption'
+      photo_data = file_chooser_button(:photo_data, filter)
+      @photo_source = Gtk::LabeledEntry.new('Source')
+      @photo_click_through_url = Gtk::LabeledEntry.new('Link (optional)')
+      @photo_caption = Gtk::LabeledTextView.new('Caption')
 
-      page = Gtk::VBox.new false, 4
-      page.set_border_width 8
+      page = Gtk::VBox.new(false, 4)
+      page.set_border_width 4
       page.pack_start photo_data, false
       page.pack_start @photo_source, false
       page.pack_start scrollable(@photo_caption), true
@@ -142,12 +143,12 @@ module Grumblr
         filter.set_name "Audio"
         filter.add_mime_type "audio/*"
 
-        audio_data = file_chooser_button :audio_data, filter
-        @audio_externally_hosted_url = Gtk::LabeledEntry.new 'Externally Hosted MP3 URL'
-        @audio_caption = Gtk::LabeledTextView.new 'Caption (optional)'
+        audio_data = file_chooser_button(:audio_data, filter)
+        @audio_externally_hosted_url = Gtk::LabeledEntry.new('Externally Hosted MP3 URL')
+        @audio_caption = Gtk::LabeledTextView.new('Caption (optional)')
 
-        page = Gtk::VBox.new false, 4
-        page.set_border_width 8
+        page = Gtk::VBox.new(false, 4)
+        page.set_border_width 4
         page.pack_start audio_data, false
         page.pack_start @audio_externally_hosted_url, false
         page.pack_start scrollable(@audio_caption), true
@@ -156,19 +157,19 @@ module Grumblr
       end
 
       # Video page
-      @video_embed = Gtk::LabeledEntry.new 'Embed code / YouTube link'
-      @video_caption = Gtk::LabeledTextView.new 'Caption (optional)'
+      @video_embed = Gtk::LabeledEntry.new('Embed code / YouTube link')
+      @video_caption = Gtk::LabeledTextView.new('Caption (optional)')
 
-      page = Gtk::VBox.new false, 4
-      page.set_border_width 8
+      page = Gtk::VBox.new(false, 4)
+      page.set_border_width 4
 
       if $api.user.can_upload_video == '1'
         filter = Gtk::FileFilter.new
         filter.set_name "Video"
         filter.add_mime_type "video/*"
 
-        video_data = file_chooser_button :video_data, filter
-        @video_title = Gtk::LabeledEntry.new 'Title (optional)'
+        video_data = file_chooser_button(:video_data, filter)
+        @video_title = Gtk::LabeledEntry.new('Title (optional)')
 
         page.pack_start video_data, false
         page.pack_start @video_title, false
@@ -178,6 +179,51 @@ module Grumblr
       page.pack_start scrollable(@video_caption), true
 
       @notebook.add_page_with_tab page, 'Video'
+
+      if DEBUG
+        # Blog info page
+        page = Gtk::VBox.new(false, 4)
+        page.set_border_width 4
+        @blog_info = Gtk::LabeledTextView.new('')
+        page.pack_start scrollable(@blog_info), true
+        @notebook.add_page_with_tab page, 'Blog'
+      end
+
+      ### Buttons
+      @private_button = Gtk::ToggleButton.new('Private')
+      @private_button.signal_connect(:toggled) do |widget|
+        $cfg.set :private, widget.active?
+      end
+      @private_button.set_active $cfg.get(:private)
+
+      @twitter_button = Gtk::ToggleButton.new('Twitter')
+      @twitter_button.signal_connect(:toggled) do |widget|
+        $cfg.set :twitter, widget.active?
+      end
+      #@twitter_button.set_active $cfg.get(:twitter)
+
+      @tags = Gtk::LabeledEntry.new('space/comma separated tags')
+
+      @format_button = Gtk::ToggleButton.new('Markdown')
+      @format_button.signal_connect(:toggled) do |widget|
+        $cfg.set :format_markdown, widget.active?
+      end
+      @format_button.set_active $cfg.get(:format_markdown)
+
+      @submit_button = Gtk::Button.new('Send')
+      @submit_button.signal_connect(:released) do |widget|
+        post
+      end
+
+      button_box = Gtk::HBox.new(false, 4)
+      button_box.set_border_width 4
+#      button_box.pack_start @clear_button, false
+      button_box.pack_start @private_button, false
+      button_box.pack_start @twitter_button, false
+      button_box.pack_start @tags, true
+      button_box.pack_start @format_button, false
+      button_box.pack_start @submit_button, false
+
 
       ### Toolbar
       toolbar = Gtk::Toolbar.new
@@ -224,57 +270,32 @@ module Grumblr
         $app.blog = $api.blogs[widget.active]
         $cfg.set :active_blog, $app.blog.name
         $statusbar.push 0, $app.blog.title
+        @blog_info.text = $app.blog.pretty_inspect if DEBUG
+        @twitter_button.set_active $app.blog.twitter_enabled == "1" ? true : false
       end
       combo.set_active(active_blog_idx)
-      item =  Gtk::ToolItem.new
+      item = Gtk::ToolItem.new
       item.set_expand true
       item.add combo
       toolbar.insert 2, item
 
-      icon = Gtk::Image.new Gtk::Stock::QUIT, Gtk::IconSize::MENU
-      item = Gtk::ToolButton.new icon, 'Quit'
+      icon = Gtk::Image.new(Gtk::Stock::CLEAR, Gtk::IconSize::MENU)
+      @clear_button = Gtk::ToolButton.new(icon, 'Clear')
+      @clear_button.signal_connect(:clicked) do |widget|
+        page = @notebook.get_nth_page(@notebook.page)
+        message_type = @notebook.get_menu_label_text(page)
+        reset_form message_type.downcase unless message_type == 'Blog'
+      end
+      toolbar.insert 3, @clear_button
+
+
+      icon = Gtk::Image.new(Gtk::Stock::QUIT, Gtk::IconSize::MENU)
+      item = Gtk::ToolButton.new(icon, 'Quit')
       item.set_homogeneous false
       item.signal_connect(:clicked) do
         $app.quit
       end
-      toolbar.insert 3, item
-
-      ### Buttons
-      clear_button = Gtk::Button.new ' Clear '
-      clear_button.set_focus_on_click false
-      clear_button.signal_connect(:clicked) do |widget|
-        page = @notebook.get_nth_page @notebook.page
-        message_type = @notebook.get_menu_label_text page
-        reset_form message_type.downcase
-      end
-
-      @private_button = Gtk::ToggleButton.new ' Private '
-      @private_button.signal_connect(:toggled) do |widget|
-        $cfg.set :private, widget.active?
-      end
-      @private_button.set_active $cfg.get(:private)
-
-      submit_button = Gtk::Button.new '  Send  '
-      submit_button.signal_connect(:released) do |widget|
-        post
-      end
-
-      @tags = Gtk::LabeledEntry.new 'space/comma separated tags'
-
-      @format = Gtk::CheckButton.new '_markdown'
-      @format.set_active $cfg.get(:format_markdown)
-      @format.signal_connect(:toggled) do |widget|
-        $cfg.set :format_markdown, widget.active?
-      end
-      format_box = Gtk::HBox.new false, 8
-      format_box.pack_start @format, false
-
-      button_box = Gtk::HBox.new false, 4
-      button_box.pack_start clear_button, false
-      button_box.pack_start @private_button, false
-      button_box.pack_start @tags, true
-      button_box.pack_start format_box, false
-      button_box.pack_start submit_button, false
+      toolbar.insert 4, item
 
       ### Layout
       pack_start toolbar, false
@@ -289,49 +310,52 @@ module Grumblr
       page = @notebook.get_nth_page @notebook.page
       message_type = @notebook.get_menu_label_text(page).downcase
 
-      mandatory_data = collect_data_for Ppds::Tumblr::MANDATORY_FIELDS, message_type
-      concurent_data = collect_data_for Ppds::Tumblr::CONCURENT_FIELDS, message_type
-      optional_data  = collect_data_for Ppds::Tumblr::OPTIONAL_FIELDS,  message_type
+      mandatory_data = collect_data_for(Ppds::Tumblr::MANDATORY_FIELDS, message_type)
+      concurent_data = collect_data_for(Ppds::Tumblr::CONCURENT_FIELDS, message_type)
+      optional_data  = collect_data_for(Ppds::Tumblr::OPTIONAL_FIELDS,  message_type)
 
       mandatory_data.each do |key, value|
         raise "Mandatory field %s is not set!" % key if not value or value.empty?
       end unless Ppds::Tumblr::MANDATORY_FIELDS[message_type].empty?
 
       unless Ppds::Tumblr::CONCURENT_FIELDS[message_type].empty?
-        concurent_data.delete_if { |x,y| y == "" or y.nil? }
+        concurent_data.delete_if { |x,y| y == '' or y.nil? }
         raise "None of fields %s is set!" % Ppds::Tumblr::CONCURENT_FIELDS[message_type].join(", ") if concurent_data.empty?
       end
 
-      optional_data.delete_if { |x,y| y == "" or y.nil? }
+      optional_data.delete_if { |x,y| y == '' or y.nil? }
 
       tags = @tags.get_value.gsub(/\s+/,',').split(',').uniq.sort - ['']
 
       data = {
         :email      => $cfg.get(:email),
         :password   => $cfg.get(:password),
-        :channel_id => $app.blog.name,
         :type       => message_type,
         :generator  => "#{Grumblr::APP_NAME} #{Grumblr::VERSION}",
+        #:date => '2010-12-01 14:50:02',
         :private    => @private_button.active? ? 1 : 0,
         :tags       => tags.join(','),
         :format     => @format.active? ? 'markdown' : 'html',
         :group      => $app.blog.name + '.tumblr.com',
-        #:slug       => ,
-        #:state      => , # published, draft, submission, queue
-        #:publish_on => , # e.g. publish-on=2010-01-01T13:34:00
-        #:send-to-twitter => , # no, auto, "message"
+        #:slug       => '',
+        #:state      => @state, # published, draft, submission, queue
+        :channel_id => $app.blog.name,
+        :send_to_twitter => @twitter_button.active? ? 'auto' : 'no'
       }
+
+      # datetime format: 2010-01-01T13:34:00
+      # data.merge!({:publish_on => @publish_on}) if @state == 'queue'
 
       data.merge! mandatory_data
       data.merge! concurent_data
       data.merge! optional_data
 
-      data.update({:data => File.read(data['data'])}) if data.has_key?('data') and data['data'] != ""
+      data.update({:data => File.read(data['data'])}) if data.has_key?('data') and data['data'] != ''
 
       dump(data) if DEBUG
 
       $api.query 'write', data
-      MessageDialog.new "Message posted", Gtk::Stock::DIALOG_INFO
+      MessageDialog.new("Message posted", Gtk::Stock::DIALOG_INFO)
       reset_form message_type
     rescue Exception
       MessageDialog.new $!
@@ -340,12 +364,8 @@ module Grumblr
     def collect_data_for(fieldset, message_type)
       data = {}
       fieldset[message_type].each do |key|
-        name = "@#{message_type}_#{key.gsub(/-/,'_')}"
-        var = instance_variable_get(name)
-        if var
-          value = var.get_value
-          data.merge!({ key => value })
-        end
+        var = instance_variable_get("@#{message_type}_#{key.gsub(/-/,'_')}")
+        data.merge!({ key.to_sym => var.get_value }) if var
       end
       data
     end
@@ -365,8 +385,7 @@ module Grumblr
 
     def reset_fields_for(fieldset, message_type)
       fieldset[message_type].each do |key|
-        name = "@#{message_type}_#{key.gsub(/-/,'_')}"
-        var = instance_variable_get(name)
+        var = instance_variable_get("@#{message_type}_#{key.gsub(/-/,'_')}")
         var.clear if var
       end
     end
@@ -404,15 +423,15 @@ module Grumblr
     def initialize(text, stock = Gtk::Stock::DIALOG_ERROR)
       super "Attention!", $gui, Gtk::Dialog::MODAL
 
-      message = Gtk::Label.new text
-      icon = Gtk::Image.new stock, Gtk::IconSize::DIALOG
+      message = Gtk::Label.new(text)
+      icon = Gtk::Image.new(stock, Gtk::IconSize::DIALOG)
 
-      hbox = Gtk::HBox.new false, 20
+      hbox = Gtk::HBox.new(false, 20)
       hbox.set_border_width 20
       hbox.pack_start icon, false
       hbox.pack_start message, true
 
-      self.add_button Gtk::Stock::OK, Gtk::Dialog::RESPONSE_NONE
+      self.add_button(Gtk::Stock::OK, Gtk::Dialog::RESPONSE_NONE)
       self.signal_connect(:response) { self.destroy }
       self.vbox.add hbox
       self.show_all
@@ -437,11 +456,11 @@ module Grumblr
 
       hbox = Gtk::HBox.new
 
-      button = Gtk::Button.new 'Cancel'
+      button = Gtk::Button.new('Cancel')
       button.signal_connect(:released) { $app.quit }
       hbox.pack_start button
 
-      button = Gtk::Button.new 'Sign in'
+      button = Gtk::Button.new('Sign in')
       button.signal_connect(:released) { login }
       hbox.pack_start button
 
@@ -449,14 +468,14 @@ module Grumblr
       header.set_alignment 0.0, 0.8
       header.set_markup '<big><big><b>Grumblr 2</b></big></big>'
 
-      vbox = Gtk::VBox.new false, 4
+      vbox = Gtk::VBox.new(false, 4)
       vbox.pack_start header
       vbox.pack_with_label '_Email', @text_e
       vbox.pack_with_label '_Password', @text_p
       vbox.pack_start @label
       vbox.pack_start hbox, false
 
-      logo = Gtk::Image.new $gui.logo
+      logo = Gtk::Image.new($gui.logo)
 
       self.pack_start logo
       self.pack_start vbox
@@ -535,7 +554,7 @@ module Grumblr
 
     ## Destroy Config
     def destroy_account
-      icon = Gtk::ImageMenuItem.new 'Forget password'
+      icon = Gtk::ImageMenuItem.new('Forget password')
       icon.set_image Gtk::Image.new(Gtk::Stock::STOP, Gtk::IconSize::MENU)
       icon.signal_connect(:activate) do
         $cfg.destroy
@@ -544,7 +563,7 @@ module Grumblr
     end
 
     def about
-      icon = Gtk::ImageMenuItem.new Gtk::Stock::ABOUT
+      icon = Gtk::ImageMenuItem.new(Gtk::Stock::ABOUT)
       icon.signal_connect(:activate) do
         AboutDialog.new
       end
@@ -552,7 +571,7 @@ module Grumblr
     end
 
     def ontop
-      icon = Gtk::CheckMenuItem.new 'Always on top'
+      icon = Gtk::CheckMenuItem.new('Always on top')
       icon.signal_connect(:toggled) do |widget|
         $gui.keep_above = widget.active?
       end
@@ -560,7 +579,7 @@ module Grumblr
     end
 
     def quit
-      icon = Gtk::ImageMenuItem.new Gtk::Stock::QUIT
+      icon = Gtk::ImageMenuItem.new(Gtk::Stock::QUIT)
       icon.signal_connect(:activate) do
         $app.quit
       end
@@ -577,7 +596,7 @@ module Gtk
 
   class Box
     def pack_with_label(text, widget, expand = false)
-      label = Gtk::Label.new text, true
+      label = Gtk::Label.new(text, true)
       label.set_alignment 0.0, 0.5
       label.set_mnemonic_widget widget
       self.pack_start label, false
@@ -610,14 +629,14 @@ module Gtk
   class Notebook
     def add_page_with_tab(page, text)
       filename = File.join(Grumblr::DATA_ROOT, 'pixmaps', '%s.bmp' % text.downcase)
-      icon = Gtk::Image.new filename
+      icon = Gtk::Image.new(filename)
       icon.set_padding 4, 0
 
-      label = Gtk::Label.new '_' + text, true
+      label = Gtk::Label.new('_' + text, true)
       label.set_alignment 0.0, 0.5
       label.set_padding 2, 2
 
-      box = Gtk::HBox.new false, 2
+      box = Gtk::HBox.new(false, 2)
       box.pack_start icon, false
       box.pack_start label, true
       box.show_all
@@ -629,6 +648,10 @@ module Gtk
   class TextView
     def get_value
       self.buffer.get_text
+    end
+
+    def text=(text)
+      self.buffer.set_text(text)
     end
   end
 
@@ -712,3 +735,4 @@ module Gtk
   end
 
 end
+
