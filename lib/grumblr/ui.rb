@@ -335,7 +335,7 @@ module Grumblr
         #:date => '2010-12-01 14:50:02',
         :private    => @private_button.active? ? 1 : 0,
         :tags       => tags.join(','),
-        :format     => @format.active? ? 'markdown' : 'html',
+        :format     => @format_button.active? ? 'markdown' : 'html',
         :group      => $app.blog.name + '.tumblr.com',
         #:slug       => '',
         #:state      => @state, # published, draft, submission, queue
