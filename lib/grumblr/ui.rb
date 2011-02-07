@@ -20,7 +20,7 @@ module Grumblr
       filename = File.join(Grumblr::DATA_ROOT, 'pixmaps', 'grumblr.svg')
       self.logo = Gdk::Pixbuf.new(filename, 128, 128)
 
-      set_size_request 480, 360
+      set_size_request 400, 300
       set_border_width 0
       set_allow_shrink false
       set_title "#{Grumblr::APP_NAME} #{Grumblr::VERSION}"
