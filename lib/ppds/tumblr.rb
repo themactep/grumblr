@@ -80,7 +80,7 @@ module Ppds
 
     def query(action, data)
       raise 'Cannot authenticate without credentials' unless data[:email] and data[:password]
-      response = RestClient.post(API_URL + action, data)
+      response = RestClient.post(API_URL + action, data.stringify_keys!)
       dump(response) if DEBUG
       response.to_str
     rescue RestClient::RequestFailed => e
@@ -110,5 +110,16 @@ module Ppds
       puts e
       false
     end
+  end
+end
+
+class Hash
+  # taken from Ruby on Rails
+  # modified to replace undercores with dashes
+  def stringify_keys!
+    keys.each do |key|
+      self[key.to_s.gsub(/_/, '-')] = delete(key)
+    end
+    self
   end
 end
