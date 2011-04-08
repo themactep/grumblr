@@ -1,3 +1,6 @@
+version 2.3.7 (2011-04-09)
+  * Fixed sending messages to private blogs.
+
 version 2.3.6 (2011-02-27)
   * Fixed file uploading.
 
