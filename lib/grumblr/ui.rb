@@ -232,14 +232,18 @@ module Grumblr
       icon = Gtk::Image.new Gtk::Stock::HOME, Gtk::IconSize::MENU
       item = Gtk::ToolButton.new icon, 'Tumblelog'
       item.signal_connect(:clicked) do
-        Thread.new { system('xdg-open "%s"' % $app.blog.url) }
+        url = $app.blog.url || "http://www.tumblr.com/dashboard"
+        Thread.new { system('xdg-open "%s"' % url) }
       end
       toolbar.insert 0, item
 
       icon = Gtk::Image.new Gtk::Stock::PREFERENCES, Gtk::IconSize::MENU
       item = Gtk::ToolButton.new icon, 'Dashboard'
       item.signal_connect(:clicked) do
-        Thread.new { system('xdg-open "http://www.tumblr.com/tumblelog/%s"' % $app.blog.name) }
+        url = $app.blog.name ?
+              "http://www.tumblr.com/tumblelog/#{$app.blog.name}" :
+              "http://www.tumblr.com/dashboard"
+        Thread.new { system('xdg-open "%s"' % url) }
       end
       toolbar.insert 1, item
 
@@ -336,12 +340,17 @@ module Grumblr
         :private    => @private_button.active? ? 1 : 0,
         :tags       => tags.join(','),
         :format     => @format_button.active? ? 'markdown' : 'html',
-        :group      => $app.blog.name + '.tumblr.com',
         #:slug       => '',
         #:state      => @state, # published, draft, submission, queue
         :channel_id => $app.blog.name,
         :send_to_twitter => @twitter_button.active? ? 'auto' : 'no'
       }
+      data.merge!({
+        :group      => ($app.blog.name << '.tumblr.com')
+      }) if $app.blog.type == 'public' and $app.blog.name
+      data.merge!({
+        :group      => ($app.blog.private_id)
+      }) if $app.blog.type = 'private' and $app.blog.private_id
 
       # datetime format: 2010-01-01T13:34:00
       # data.merge!({:publish_on => @publish_on}) if @state == 'queue'
