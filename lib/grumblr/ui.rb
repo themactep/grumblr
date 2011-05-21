@@ -180,7 +180,7 @@ module Grumblr
 
       @notebook.add_page_with_tab page, 'Video'
 
-      if DEBUG
+      if $DEBUG
         # Blog info page
         page = Gtk::VBox.new(false, 4)
         page.set_border_width 4
@@ -274,7 +274,7 @@ module Grumblr
         $app.blog = $api.blogs[widget.active]
         $cfg.set :active_blog, $app.blog.name
         $statusbar.push 0, $app.blog.title
-        @blog_info.text = $app.blog.pretty_inspect if DEBUG
+        @blog_info.text = $app.blog.pretty_inspect if $DEBUG
         @twitter_button.set_active $app.blog.twitter_enabled == "1" ? true : false
       end
       combo.set_active(active_blog_idx)
@@ -361,7 +361,7 @@ module Grumblr
 
       data.update({:data => File.read(data[:data])}) if data.has_key?(:data) and data[:data] != ''
 
-      dump(data) if DEBUG
+      dump(data) if $DEBUG
 
       $api.query 'write', data
       MessageDialog.new("Message posted", Gtk::Stock::DIALOG_INFO)

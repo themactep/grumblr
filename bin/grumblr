@@ -11,15 +11,13 @@
 
 $:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 
-DEBUG = false
-
 begin
   require 'rubygems'
 rescue LoadError
   nil
 end
 
-require 'ppds/debug' if DEBUG
+require 'ppds/debug' if $DEBUG
 require 'grumblr/core'
 
 Grumblr::Core.new

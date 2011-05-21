@@ -3,6 +3,8 @@ require 'rest_client'
 require 'xml'
 
 module Ppds
+  puts "Running RestClient #{RestClient.version}"
+
   class User < ClassFactory
     attr_accessor :can_ask_question,
                   :can_upload_aiff,
@@ -81,7 +83,7 @@ module Ppds
     def query(action, data)
       raise 'Cannot authenticate without credentials' unless data[:email] and data[:password]
       response = RestClient.post(API_URL + action, data.stringify_keys!)
-      dump(response) if DEBUG
+      dump(response) if $DEBUG
       response.to_str
     rescue RestClient::RequestFailed => e
       raise 'Query failed: %s' % e.response.body
