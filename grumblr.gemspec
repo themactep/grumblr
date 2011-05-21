@@ -13,7 +13,6 @@ Gem::Specification.new do |s|
   s.require_path = "lib"
   s.rubyforge_project = 'grumblr'
   s.summary = "a Tumblr companion"
-  s.has_rdoc = false
   s.add_dependency "ppds-libs"
   s.add_dependency "libxml-ruby"
   s.add_dependency "rest-client", '>= 1.6.0'

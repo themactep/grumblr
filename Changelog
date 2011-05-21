@@ -1,3 +1,6 @@
+version 2.3.8 (2011-05-21)
+  * Use global $DEBUG.
+
 version 2.3.7 (2011-04-09)
   * Fixed sending messages to private blogs.
 
