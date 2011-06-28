@@ -61,7 +61,7 @@ module Grumblr
       ### Statusbar
       $statusbar = Gtk::Statusbar.new
       $statusbar.set_border_width 2
-      
+
       ### Notebook
       @notebook = Gtk::Notebook.new
       @notebook.set_border_width 0
