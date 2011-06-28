@@ -1,5 +1,5 @@
-require 'ppds/config'
 require 'ppds/tumblr'
+require 'grumblr/config'
 require 'grumblr/ui'
 require 'gtk2'
 
@@ -11,7 +11,7 @@ module Grumblr
     def initialize
       $app = self
 
-      $cfg = Ppds::Config.new 'grumblr'
+      $cfg = Grumblr::Config.new
 
       $gui = Grumblr::UI.new
       $gui.show_all
