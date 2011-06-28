@@ -1,3 +1,8 @@
+version 2.4.0 (2011-06-28)
+  * Drop deprecated gconf2 in favor of a yaml config.
+  * Drop ppds-libs, incorporate class factory lib directly.
+  * Make ruby 1.9.2 complatible.
+
 version 2.3.8 (2011-05-21)
   * Use global $DEBUG.
 
