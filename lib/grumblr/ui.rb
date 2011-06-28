@@ -1,6 +1,6 @@
 require 'gtk2'
 require 'open-uri'
-require 'ftools'
+require 'fileutils'
 
 module Grumblr
 

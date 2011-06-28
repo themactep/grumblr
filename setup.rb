@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
-require 'ftools'
+require 'fileutils'
 
 unless Process.uid == 0
   puts "Must run as root"
