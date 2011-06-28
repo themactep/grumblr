@@ -25,8 +25,8 @@ Gem.path.each do |path|
     puts " - #{target} exists, skipping."
   else
     puts " + #{target} does not exist. copying"
-    File.copy File.join(path, 'data', 'pixmaps', 'grumblr.svg'),
-              target, :verbose => true
+    FileUtils.copy File.join(path, 'data', 'pixmaps', 'grumblr.svg'),
+                   target, :verbose => true
   end
 
   target = '/usr/share/applications/grumblr.desktop'
@@ -34,8 +34,8 @@ Gem.path.each do |path|
     puts " - #{target} exists, skipping."
   else
     puts " + #{target} does not exist, copying"
-    File.copy File.join(path, 'data', 'grumblr.desktop'),
-              target, :verbose => true
+    FileUtils.copy File.join(path, 'data', 'grumblr.desktop'),
+                   target, :verbose => true
   end
 
   target = '/usr/local/bin/grumblr'
