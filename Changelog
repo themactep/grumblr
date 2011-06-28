@@ -1,3 +1,6 @@
+version 2.4.1 (2011-06-28)
+  * Bugfix release. Use FileUtils in setup script.
+
 version 2.4.0 (2011-06-28)
   * Drop deprecated gconf2 in favor of a yaml config.
   * Drop ppds-libs, incorporate class factory lib directly.
