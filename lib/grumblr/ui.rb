@@ -361,7 +361,9 @@ module Grumblr
       data.merge! concurent_data
       data.merge! optional_data
 
-      data.update({:data => File.read(data[:data])}) if data.has_key?(:data) and data[:data] != ''
+      data.update({
+        :data => File.open(data[:data], 'rb') { |f| f.read }
+      }) if data.has_key?(:data) and data[:data] != ''
 
       dump(data) if $DEBUG
 
