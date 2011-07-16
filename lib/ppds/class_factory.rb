@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Ppds
   class ClassFactory
     def initialize(data=[])

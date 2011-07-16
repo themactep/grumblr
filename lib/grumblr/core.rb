@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'ppds/tumblr'
 require 'grumblr/config'
 require 'grumblr/ui'

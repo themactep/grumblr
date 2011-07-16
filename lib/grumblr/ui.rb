@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'gtk2'
 require 'open-uri'
 require 'fileutils'

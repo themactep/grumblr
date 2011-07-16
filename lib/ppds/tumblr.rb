@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'ppds/class_factory'
 require 'rest_client'
 require 'xml'
