@@ -1,3 +1,6 @@
+verison 2.4.2
+  * Fix reading binary files under ruby 1.9.
+
 version 2.4.1 (2011-06-28)
   * Bugfix release. Use FileUtils in setup script.
 
