@@ -313,7 +313,7 @@ module Grumblr
     end
 
     def post
-      page = @notebook.get_nth_page @notebook.page
+      page = @notebook.get_nth_page(@notebook.page)
       message_type = @notebook.get_menu_label_text(page).downcase
 
       mandatory_data = collect_data_for(Ppds::Tumblr::MANDATORY_FIELDS, message_type)
